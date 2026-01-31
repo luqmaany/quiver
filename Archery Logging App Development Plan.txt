@@ -1,0 +1,55 @@
+﻿A stylized image of an archery target with arrows hitting it and a smartphone showing a logging application interface 
+
+Archery Logging App Development Plan
+This document outlines the development plan for a mobile application designed to log archery practice sessions. The application will be built using Flutter and will focus on visual logging of arrow hits on a target image, along with voice-based note-taking for each session.
+I. Project Overview
+Goal
+To create a user-friendly, cross-platform mobile application for archers to accurately log their shooting sessions, visualize shot patterns, and record session notes easily using voice input.
+Technology Stack
+The application will be developed using the Flutter framework to ensure compatibility with both Android and iOS platforms.
+II. Key Features
+The application will include the following core features:
+
+
+1. User Authentication: Secure login and user profile management.
+2. Session Management: Creation, saving, and retrieval of archery sessions.
+3. Target Visualization: Ability to display a standard archery target image.
+4. Shot Logging: Interactive drag-and-drop functionality for marking arrow hits on the target image.
+5. Voice Notes: Integration of a feature to record and transcribe spoken notes for each session.
+6. Data Persistence: Local and cloud storage options for session data.
+III. Development Phases and Milestones
+The project will be broken down into four major phases, with estimated timelines and key deliverables.
+
+
+Phase
+	Focus Area
+	Key Deliverables
+	Phase 1: Setup and Core Structure
+	Project setup, navigation, and data model.
+	Flutter project initialized, data structure defined, basic user flow established, login screen implemented.
+	Phase 2: Target and Drag-and-Drop
+	Implementation of the core shot logging feature.
+	Target image rendering, custom widget for drag-and-drop arrow placement, ability to save and reset shots on the target.
+	Phase 3: Voice Note Integration
+	Implementing voice recording and storage.
+	Voice recording functionality, note playback, integration with a transcription service (if required) or simple audio file storage.
+	Phase 4: Testing, Refinement, and Deployment
+	QA, bug fixes, and preparation for app store release.
+	Full user testing, performance optimization, final UI/UX polish, app store submission files prepared (File).
+	IV. Technical Implementation Details
+A. Target Visualization and Shot Logging
+The target image will be a scalable asset. The shot logging mechanism will use a stateful widget to manage the coordinates of the placed arrows.
+
+
+* Asset: Standard target image (e.g., WA 10-ring).
+* Interaction: Tapping and dragging on the target to place an arrow icon. Each arrow will store its normalized coordinates (relative to the target image size) for accurate scaling across different device screen sizes.
+B. Voice Notes
+We will use platform-specific libraries for audio recording in Flutter.
+
+
+* Recording: Simple start/stop/playback functionality.
+* Storage: Notes will be stored as small audio files linked to the specific session.
+* User Interface: A microphone button will be clearly visible during the session logging screen.
+
+
+The voice notes feature will allow users to record observations about the session, such as: "Wind was strong from the left," or "I focused on my anchor point more this session."
