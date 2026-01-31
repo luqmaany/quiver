@@ -1,2 +1,2 @@
 # quiver
-Application so log archery sessions.
+Application to log archery sessions.
