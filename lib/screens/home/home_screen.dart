@@ -193,6 +193,11 @@ class _SessionCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dateFormat = DateFormat('MMM dd, yyyy • HH:mm');
+    
+    // Calculate aggregate stats from rounds
+    final totalArrows = session.rounds.fold(0, (sum, r) => sum + r.arrowCount);
+    final totalScore = session.rounds.fold(0, (sum, r) => sum + r.totalScore);
+    final averageScore = totalArrows > 0 ? totalScore / totalArrows : null;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -230,19 +235,24 @@ class _SessionCard extends ConsumerWidget {
               Row(
                 children: [
                   _StatChip(
+                    icon: Icons.track_changes,
+                    label: '${session.rounds.length} rounds',
+                  ),
+                  const SizedBox(width: 8),
+                  _StatChip(
                     icon: Icons.arrow_forward,
-                    label: '${session.arrowCount} arrows',
+                    label: '$totalArrows arrows',
                   ),
                   const SizedBox(width: 8),
                   _StatChip(
                     icon: Icons.stars,
-                    label: 'Score: ${session.totalScore}',
+                    label: '$totalScore pts',
                   ),
-                  if (session.averageScore != null) ...[
+                  if (averageScore != null) ...[
                     const SizedBox(width: 8),
                     _StatChip(
                       icon: Icons.show_chart,
-                      label: 'Avg: ${session.averageScore!.toStringAsFixed(1)}',
+                      label: 'Avg: ${averageScore.toStringAsFixed(1)}',
                     ),
                   ],
                 ],

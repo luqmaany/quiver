@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/sessions/session_detail_screen.dart';
+import 'screens/rounds/round_detail_screen.dart';
 import 'screens/settings/settings_screen.dart';
 
 class QuiverApp extends StatelessWidget {
@@ -31,6 +32,17 @@ class QuiverApp extends StatelessWidget {
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           return SessionDetailScreen(sessionId: id);
+        },
+      ),
+      GoRoute(
+        path: '/session/:sessionId/round/:roundId',
+        builder: (context, state) {
+          final sessionId = state.pathParameters['sessionId']!;
+          final roundId = state.pathParameters['roundId']!;
+          return RoundDetailScreen(
+            sessionId: sessionId,
+            roundId: roundId,
+          );
         },
       ),
       GoRoute(

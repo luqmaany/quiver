@@ -30,17 +30,22 @@ mixin _$ArcherySession {
   @HiveField(3)
   String? get title =>
       throw _privateConstructorUsedError; // "Morning practice", etc.
+  @HiveField(14)
+  List<ArcheryRound> get rounds =>
+      throw _privateConstructorUsedError; // NEW: Round-based structure
+// DEPRECATED but keep for migration:
+  @Deprecated('Use rounds instead')
   @HiveField(4)
-  int get arrowCount => throw _privateConstructorUsedError;
+  int? get arrowCount => throw _privateConstructorUsedError;
+  @Deprecated('Use rounds instead')
   @HiveField(5)
-  int get totalScore =>
-      throw _privateConstructorUsedError; // Sum of shot scores (for league points)
+  int? get totalScore => throw _privateConstructorUsedError;
+  @Deprecated('Use rounds instead')
   @HiveField(6)
-  double? get averageScore =>
-      throw _privateConstructorUsedError; // Derived (for stats/leagues)
+  double? get averageScore => throw _privateConstructorUsedError;
+  @Deprecated('Use rounds instead')
   @HiveField(7)
-  List<ShotPosition> get shots =>
-      throw _privateConstructorUsedError; // For Phase 2
+  List<ShotPosition> get shots => throw _privateConstructorUsedError;
   @HiveField(8)
   String? get voiceNotePath =>
       throw _privateConstructorUsedError; // For Phase 3 (local file path)
@@ -78,10 +83,11 @@ abstract class $ArcherySessionCopyWith<$Res> {
       @HiveField(1) String ownerId,
       @HiveField(2) DateTime date,
       @HiveField(3) String? title,
-      @HiveField(4) int arrowCount,
-      @HiveField(5) int totalScore,
-      @HiveField(6) double? averageScore,
-      @HiveField(7) List<ShotPosition> shots,
+      @HiveField(14) List<ArcheryRound> rounds,
+      @Deprecated('Use rounds instead') @HiveField(4) int? arrowCount,
+      @Deprecated('Use rounds instead') @HiveField(5) int? totalScore,
+      @Deprecated('Use rounds instead') @HiveField(6) double? averageScore,
+      @Deprecated('Use rounds instead') @HiveField(7) List<ShotPosition> shots,
       @HiveField(8) String? voiceNotePath,
       @HiveField(9) String? voiceNoteUrl,
       @HiveField(10) String? transcription,
@@ -109,8 +115,9 @@ class _$ArcherySessionCopyWithImpl<$Res, $Val extends ArcherySession>
     Object? ownerId = null,
     Object? date = null,
     Object? title = freezed,
-    Object? arrowCount = null,
-    Object? totalScore = null,
+    Object? rounds = null,
+    Object? arrowCount = freezed,
+    Object? totalScore = freezed,
     Object? averageScore = freezed,
     Object? shots = null,
     Object? voiceNotePath = freezed,
@@ -137,14 +144,18 @@ class _$ArcherySessionCopyWithImpl<$Res, $Val extends ArcherySession>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String?,
-      arrowCount: null == arrowCount
+      rounds: null == rounds
+          ? _value.rounds
+          : rounds // ignore: cast_nullable_to_non_nullable
+              as List<ArcheryRound>,
+      arrowCount: freezed == arrowCount
           ? _value.arrowCount
           : arrowCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalScore: null == totalScore
+              as int?,
+      totalScore: freezed == totalScore
           ? _value.totalScore
           : totalScore // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       averageScore: freezed == averageScore
           ? _value.averageScore
           : averageScore // ignore: cast_nullable_to_non_nullable
@@ -194,10 +205,11 @@ abstract class _$$ArcherySessionImplCopyWith<$Res>
       @HiveField(1) String ownerId,
       @HiveField(2) DateTime date,
       @HiveField(3) String? title,
-      @HiveField(4) int arrowCount,
-      @HiveField(5) int totalScore,
-      @HiveField(6) double? averageScore,
-      @HiveField(7) List<ShotPosition> shots,
+      @HiveField(14) List<ArcheryRound> rounds,
+      @Deprecated('Use rounds instead') @HiveField(4) int? arrowCount,
+      @Deprecated('Use rounds instead') @HiveField(5) int? totalScore,
+      @Deprecated('Use rounds instead') @HiveField(6) double? averageScore,
+      @Deprecated('Use rounds instead') @HiveField(7) List<ShotPosition> shots,
       @HiveField(8) String? voiceNotePath,
       @HiveField(9) String? voiceNoteUrl,
       @HiveField(10) String? transcription,
@@ -223,8 +235,9 @@ class __$$ArcherySessionImplCopyWithImpl<$Res>
     Object? ownerId = null,
     Object? date = null,
     Object? title = freezed,
-    Object? arrowCount = null,
-    Object? totalScore = null,
+    Object? rounds = null,
+    Object? arrowCount = freezed,
+    Object? totalScore = freezed,
     Object? averageScore = freezed,
     Object? shots = null,
     Object? voiceNotePath = freezed,
@@ -251,14 +264,18 @@ class __$$ArcherySessionImplCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String?,
-      arrowCount: null == arrowCount
+      rounds: null == rounds
+          ? _value._rounds
+          : rounds // ignore: cast_nullable_to_non_nullable
+              as List<ArcheryRound>,
+      arrowCount: freezed == arrowCount
           ? _value.arrowCount
           : arrowCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalScore: null == totalScore
+              as int?,
+      totalScore: freezed == totalScore
           ? _value.totalScore
           : totalScore // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       averageScore: freezed == averageScore
           ? _value.averageScore
           : averageScore // ignore: cast_nullable_to_non_nullable
@@ -303,17 +320,21 @@ class _$ArcherySessionImpl implements _ArcherySession {
       @HiveField(1) required this.ownerId,
       @HiveField(2) required this.date,
       @HiveField(3) this.title,
-      @HiveField(4) required this.arrowCount,
-      @HiveField(5) required this.totalScore,
-      @HiveField(6) this.averageScore,
-      @HiveField(7) final List<ShotPosition> shots = const [],
+      @HiveField(14) final List<ArcheryRound> rounds = const [],
+      @Deprecated('Use rounds instead') @HiveField(4) this.arrowCount,
+      @Deprecated('Use rounds instead') @HiveField(5) this.totalScore,
+      @Deprecated('Use rounds instead') @HiveField(6) this.averageScore,
+      @Deprecated('Use rounds instead')
+      @HiveField(7)
+      final List<ShotPosition> shots = const [],
       @HiveField(8) this.voiceNotePath,
       @HiveField(9) this.voiceNoteUrl,
       @HiveField(10) this.transcription,
       @HiveField(11) this.isSynced = false,
       @HiveField(12) required this.createdAt,
       @HiveField(13) required this.updatedAt})
-      : _shots = shots;
+      : _rounds = rounds,
+        _shots = shots;
 
   factory _$ArcherySessionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ArcherySessionImplFromJson(json);
@@ -332,21 +353,35 @@ class _$ArcherySessionImpl implements _ArcherySession {
   @HiveField(3)
   final String? title;
 // "Morning practice", etc.
-  @override
-  @HiveField(4)
-  final int arrowCount;
-  @override
-  @HiveField(5)
-  final int totalScore;
-// Sum of shot scores (for league points)
-  @override
-  @HiveField(6)
-  final double? averageScore;
-// Derived (for stats/leagues)
-  final List<ShotPosition> _shots;
-// Derived (for stats/leagues)
+  final List<ArcheryRound> _rounds;
+// "Morning practice", etc.
   @override
   @JsonKey()
+  @HiveField(14)
+  List<ArcheryRound> get rounds {
+    if (_rounds is EqualUnmodifiableListView) return _rounds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_rounds);
+  }
+
+// NEW: Round-based structure
+// DEPRECATED but keep for migration:
+  @override
+  @Deprecated('Use rounds instead')
+  @HiveField(4)
+  final int? arrowCount;
+  @override
+  @Deprecated('Use rounds instead')
+  @HiveField(5)
+  final int? totalScore;
+  @override
+  @Deprecated('Use rounds instead')
+  @HiveField(6)
+  final double? averageScore;
+  final List<ShotPosition> _shots;
+  @override
+  @JsonKey()
+  @Deprecated('Use rounds instead')
   @HiveField(7)
   List<ShotPosition> get shots {
     if (_shots is EqualUnmodifiableListView) return _shots;
@@ -354,7 +389,6 @@ class _$ArcherySessionImpl implements _ArcherySession {
     return EqualUnmodifiableListView(_shots);
   }
 
-// For Phase 2
   @override
   @HiveField(8)
   final String? voiceNotePath;
@@ -381,7 +415,7 @@ class _$ArcherySessionImpl implements _ArcherySession {
 
   @override
   String toString() {
-    return 'ArcherySession(id: $id, ownerId: $ownerId, date: $date, title: $title, arrowCount: $arrowCount, totalScore: $totalScore, averageScore: $averageScore, shots: $shots, voiceNotePath: $voiceNotePath, voiceNoteUrl: $voiceNoteUrl, transcription: $transcription, isSynced: $isSynced, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ArcherySession(id: $id, ownerId: $ownerId, date: $date, title: $title, rounds: $rounds, arrowCount: $arrowCount, totalScore: $totalScore, averageScore: $averageScore, shots: $shots, voiceNotePath: $voiceNotePath, voiceNoteUrl: $voiceNoteUrl, transcription: $transcription, isSynced: $isSynced, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -393,6 +427,7 @@ class _$ArcherySessionImpl implements _ArcherySession {
             (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.title, title) || other.title == title) &&
+            const DeepCollectionEquality().equals(other._rounds, _rounds) &&
             (identical(other.arrowCount, arrowCount) ||
                 other.arrowCount == arrowCount) &&
             (identical(other.totalScore, totalScore) ||
@@ -422,6 +457,7 @@ class _$ArcherySessionImpl implements _ArcherySession {
       ownerId,
       date,
       title,
+      const DeepCollectionEquality().hash(_rounds),
       arrowCount,
       totalScore,
       averageScore,
@@ -456,10 +492,15 @@ abstract class _ArcherySession implements ArcherySession {
       @HiveField(1) required final String ownerId,
       @HiveField(2) required final DateTime date,
       @HiveField(3) final String? title,
-      @HiveField(4) required final int arrowCount,
-      @HiveField(5) required final int totalScore,
-      @HiveField(6) final double? averageScore,
-      @HiveField(7) final List<ShotPosition> shots,
+      @HiveField(14) final List<ArcheryRound> rounds,
+      @Deprecated('Use rounds instead') @HiveField(4) final int? arrowCount,
+      @Deprecated('Use rounds instead') @HiveField(5) final int? totalScore,
+      @Deprecated('Use rounds instead')
+      @HiveField(6)
+      final double? averageScore,
+      @Deprecated('Use rounds instead')
+      @HiveField(7)
+      final List<ShotPosition> shots,
       @HiveField(8) final String? voiceNotePath,
       @HiveField(9) final String? voiceNoteUrl,
       @HiveField(10) final String? transcription,
@@ -483,17 +524,25 @@ abstract class _ArcherySession implements ArcherySession {
   @HiveField(3)
   String? get title; // "Morning practice", etc.
   @override
+  @HiveField(14)
+  List<ArcheryRound> get rounds; // NEW: Round-based structure
+// DEPRECATED but keep for migration:
+  @override
+  @Deprecated('Use rounds instead')
   @HiveField(4)
-  int get arrowCount;
+  int? get arrowCount;
   @override
+  @Deprecated('Use rounds instead')
   @HiveField(5)
-  int get totalScore; // Sum of shot scores (for league points)
+  int? get totalScore;
   @override
+  @Deprecated('Use rounds instead')
   @HiveField(6)
-  double? get averageScore; // Derived (for stats/leagues)
+  double? get averageScore;
   @override
+  @Deprecated('Use rounds instead')
   @HiveField(7)
-  List<ShotPosition> get shots; // For Phase 2
+  List<ShotPosition> get shots;
   @override
   @HiveField(8)
   String? get voiceNotePath; // For Phase 3 (local file path)

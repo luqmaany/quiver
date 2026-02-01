@@ -21,8 +21,9 @@ class ArcherySessionAdapter extends TypeAdapter<ArcherySession> {
       ownerId: fields[1] as String,
       date: fields[2] as DateTime,
       title: fields[3] as String?,
-      arrowCount: fields[4] as int,
-      totalScore: fields[5] as int,
+      rounds: (fields[14] as List).cast<ArcheryRound>(),
+      arrowCount: fields[4] as int?,
+      totalScore: fields[5] as int?,
       averageScore: fields[6] as double?,
       shots: (fields[7] as List).cast<ShotPosition>(),
       voiceNotePath: fields[8] as String?,
@@ -37,7 +38,7 @@ class ArcherySessionAdapter extends TypeAdapter<ArcherySession> {
   @override
   void write(BinaryWriter writer, ArcherySession obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -46,6 +47,8 @@ class ArcherySessionAdapter extends TypeAdapter<ArcherySession> {
       ..write(obj.date)
       ..writeByte(3)
       ..write(obj.title)
+      ..writeByte(14)
+      ..write(obj.rounds)
       ..writeByte(4)
       ..write(obj.arrowCount)
       ..writeByte(5)
@@ -89,8 +92,12 @@ _$ArcherySessionImpl _$$ArcherySessionImplFromJson(Map<String, dynamic> json) =>
       ownerId: json['ownerId'] as String,
       date: DateTime.parse(json['date'] as String),
       title: json['title'] as String?,
-      arrowCount: (json['arrowCount'] as num).toInt(),
-      totalScore: (json['totalScore'] as num).toInt(),
+      rounds: (json['rounds'] as List<dynamic>?)
+              ?.map((e) => ArcheryRound.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      arrowCount: (json['arrowCount'] as num?)?.toInt(),
+      totalScore: (json['totalScore'] as num?)?.toInt(),
       averageScore: (json['averageScore'] as num?)?.toDouble(),
       shots: (json['shots'] as List<dynamic>?)
               ?.map((e) => ShotPosition.fromJson(e as Map<String, dynamic>))
@@ -111,6 +118,7 @@ Map<String, dynamic> _$$ArcherySessionImplToJson(
       'ownerId': instance.ownerId,
       'date': instance.date.toIso8601String(),
       'title': instance.title,
+      'rounds': instance.rounds,
       'arrowCount': instance.arrowCount,
       'totalScore': instance.totalScore,
       'averageScore': instance.averageScore,

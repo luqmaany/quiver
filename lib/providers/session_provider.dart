@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/archery_session.dart';
+import '../models/archery_round.dart';
+import '../models/shot_position.dart';
 import '../models/user_profile.dart';
 import '../repositories/local_session_repository.dart';
 import 'user_provider.dart';
@@ -47,6 +49,93 @@ class SessionListNotifier extends StateNotifier<List<ArcherySession>> {
   List<ArcherySession> getSessionsByDateRange(DateTime start, DateTime end) {
     return _repository.getSessionsByDateRange(start, end);
   }
+
+  // Round management methods
+  Future<void> addRound(String sessionId, ArcheryRound round) async {
+    final session = state.firstWhere((s) => s.id == sessionId);
+    final updatedRounds = [...session.rounds, round];
+    final updatedSession = session.copyWith(
+      rounds: updatedRounds,
+      updatedAt: DateTime.now(),
+    );
+    await updateSession(updatedSession);
+  }
+
+  Future<void> updateRound(String sessionId, ArcheryRound round) async {
+    final session = state.firstWhere((s) => s.id == sessionId);
+    final updatedRounds = session.rounds.map((r) {
+      return r.id == round.id ? round : r;
+    }).toList();
+    final updatedSession = session.copyWith(
+      rounds: updatedRounds,
+      updatedAt: DateTime.now(),
+    );
+    await updateSession(updatedSession);
+  }
+
+  Future<void> deleteRound(String sessionId, String roundId) async {
+    final session = state.firstWhere((s) => s.id == sessionId);
+    final updatedRounds = session.rounds.where((r) => r.id != roundId).toList();
+    final updatedSession = session.copyWith(
+      rounds: updatedRounds,
+      updatedAt: DateTime.now(),
+    );
+    await updateSession(updatedSession);
+  }
+
+  Future<void> addShotToRound(
+    String sessionId,
+    String roundId,
+    ShotPosition shot,
+  ) async {
+    final session = state.firstWhere((s) => s.id == sessionId);
+    final updatedRounds = session.rounds.map((round) {
+      if (round.id == roundId) {
+        final updatedShots = [...round.shots, shot];
+        final totalScore = updatedShots.fold(0, (sum, s) => sum + s.score);
+        return round.copyWith(
+          shots: updatedShots,
+          arrowCount: updatedShots.length,
+          totalScore: totalScore,
+          averageScore: updatedShots.isNotEmpty
+              ? totalScore / updatedShots.length
+              : null,
+        );
+      }
+      return round;
+    }).toList();
+    
+    final updatedSession = session.copyWith(
+      rounds: updatedRounds,
+      updatedAt: DateTime.now(),
+    );
+    await updateSession(updatedSession);
+  }
+
+  Future<void> undoLastShotInRound(String sessionId, String roundId) async {
+    final session = state.firstWhere((s) => s.id == sessionId);
+    final updatedRounds = session.rounds.map((round) {
+      if (round.id == roundId && round.shots.isNotEmpty) {
+        final updatedShots = round.shots.sublist(0, round.shots.length - 1);
+        final totalScore = updatedShots.fold(0, (sum, s) => sum + s.score);
+        return round.copyWith(
+          shots: updatedShots,
+          arrowCount: updatedShots.length,
+          totalScore: totalScore,
+          averageScore: updatedShots.isNotEmpty
+              ? totalScore / updatedShots.length
+              : null,
+        );
+      }
+      return round;
+    }).toList();
+    
+    final updatedSession = session.copyWith(
+      rounds: updatedRounds,
+      updatedAt: DateTime.now(),
+    );
+    await updateSession(updatedSession);
+  }
 }
 
 // Provider for a single session by ID
@@ -77,8 +166,6 @@ class CreateSessionHelper {
 
   Future<ArcherySession> createNewSession({
     String? title,
-    int arrowCount = 0,
-    int totalScore = 0,
   }) async {
     final now = DateTime.now();
     final session = ArcherySession(
@@ -86,9 +173,7 @@ class CreateSessionHelper {
       ownerId: userProfile.id,
       date: now,
       title: title,
-      arrowCount: arrowCount,
-      totalScore: totalScore,
-      averageScore: arrowCount > 0 ? totalScore / arrowCount : null,
+      rounds: [], // New round-based structure
       createdAt: now,
       updatedAt: now,
     );
